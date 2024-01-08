@@ -10,6 +10,7 @@ const auth = require('./middlewares/auth');
 
 
 const app = express();
+const helmet = require("helmet");
 
 mongoose.connect('mongodb+srv://hamlayes:Hamlaoui976*@atlascluster.kepjewx.mongodb.net/gsb-visite?retryWrites=true&w=majority')
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -24,6 +25,9 @@ app.use((req, res, next) => {
   next();
 });
 
+
+app.use(helmet());
+app.set('trust proxy', 1);
 app.use('/api/stuff',auth, stuffRoutes);
 app.use('/api/motif',auth, motifRoutes);
 app.use('/api/visiteur',auth, visiteurRoutes);
