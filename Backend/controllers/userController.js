@@ -4,16 +4,13 @@ const bcrypt = require('bcrypt');
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require('express-validator');
 
-
-
 require('dotenv').config();
 
 // Signup user
 exports.signup = [
     // Validate and sanitize fields.
-   //body('email').isEmail().withMessage('Veuillez entrer un email valide.').normalizeEmail(),
+    //body('email').isEmail().withMessage('Veuillez entrer un email valide.').normalizeEmail(),
     //body('password').isLength({ min: 5 }).withMessage('Le mot de passe doit contenir au moins 5 caractères.').trim(),
-
 
     asyncHandler(async (req, res, next) => {
         // Check for errors.
@@ -23,6 +20,11 @@ exports.signup = [
             return res.status(400).json({ error: errors.array()[0].msg });
         }
 
+        // Check if email already exists
+        const existingVisiteur = await Visiteur.findOne({ email: req.body.email });
+        if (existingVisiteur) {
+            return res.status(400).json({ error: 'Email already in use.' });
+        }
 
         const hash = await bcrypt.hash(req.body.password, 10);
         const visiteur = new Visiteur({
@@ -32,20 +34,16 @@ exports.signup = [
             date_embauche: req.body.date_embauche,
             email: req.body.email,
             password: hash
-            
         });
         await visiteur.save();
         res.status(201).json({ message: 'Utilisateur créé !', 
                                 visiteur_id: visiteur._id,
-                            visiteur_email: req.body,
-                            visiteur_password: req});
+                            visiteur_email: req.body.email,
+                            visiteur_password: req.body.password});
     })
 ];
 
-
 //Login user
-
-
 exports.login = asyncHandler(async (req, res, next) => {
     const visiteur = await Visiteur.findOne({ email: req.body.email });
     if (!visiteur) {
@@ -61,6 +59,7 @@ exports.login = asyncHandler(async (req, res, next) => {
             { visiteurId: visiteur._id },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
-        )
+        ),
+        message: 'Utilisateur connecté !'
     });
 });

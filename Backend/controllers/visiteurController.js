@@ -7,7 +7,7 @@ exports.createVisiteur = expressAsyncHandler(async (req, res, next) => {
     nom : req.body.nom,
     prenom : req.body.prenom,
     tel : req.body.tel,
-    email : req.body.email,
+    email : req.body.email,unique: true,
     date_embauche : req.body.date_embauche,
     visite : req.body.visite,
   });
