@@ -6,6 +6,7 @@ const motifRoutes = require('./routes/motif');
 const visiteurRoutes = require('./routes/visiteur');
 const visiteRoutes = require('./routes/visite');
 const userRoutes = require('./routes/user');
+const praticienRoutes = require('./routes/praticien');
 const auth = require('./middlewares/auth');
 
 
@@ -33,6 +34,7 @@ app.use('/api/motif',auth, motifRoutes);
 app.use('/api/visiteur',auth, visiteurRoutes);
 app.use('/api/visite',auth, visiteRoutes);
 app.use('/api/user',auth, userRoutes);
+app.use('/api/praticien',auth, praticienRoutes);
 app.use('/api/auth', userRoutes);
 
 
