@@ -22,7 +22,7 @@ exports.createVisiteur = expressAsyncHandler(async (req, res, next) => {
 exports.getOneVisiteur = expressAsyncHandler(async (req, res, next) => {
   const visiteur = await Visiteur.findOne({
     _id: req.params.id
-  });
+  }).populate('porteFeuille');
 
   if (visiteur) {
     res.status(200).json(visiteur);
@@ -61,4 +61,29 @@ exports.deleteVisiteur = expressAsyncHandler(async (req, res, next) => {
 exports.getAllVisiteurs = expressAsyncHandler(async (req, res, next) => {
   const visiteurs = await Visiteur.find();
   res.status(200).json(visiteurs);
+});
+
+
+
+exports.addPortfeuille = expressAsyncHandler(async (req, res, next) => {
+
+  const visiteurId = req.params.visiteurId; 
+  const praticienId = req.params.praticienId;
+
+  const visiteur = await Visiteur.findById(visiteurId);
+  
+
+  if (!visiteurId) {
+    return res.status(404).send({ message: 'Visiteur non trouvé' });
+  }
+
+
+  visiteur.porteFeuille.push(praticienId);
+  const updatedVisiteur = await visiteur.save();
+
+  res.status(200).json(updatedVisiteur);
+
+
+
+
 });

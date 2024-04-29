@@ -11,9 +11,9 @@ const visiteurSchema = mongoose.Schema({
   password: { type: String, required: true },
   date_embauche: { type: Date, required: false },
   visite : { type: mongoose.Schema.Types.ObjectId, ref: 'Visite', required: false },
+  porteFeuille : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Praticien'}],
 });
 
-const secret = 'some secret string'; // Remplacez ceci par votre propre clé secrète
-visiteurSchema.plugin(encrypt, { secret: process.env.SECRET, encryptedFields: ['nom','prenom','tel'] });
+
 
 module.exports = mongoose.model('Visiteur', visiteurSchema);
