@@ -12,7 +12,7 @@ const praticienSchema = mongoose.Schema({
   rue: { type: String, required: true },
   code_postale: { type: String, required: true },
   ville: { type: String, required: true },
-  visite : { type: mongoose.Schema.Types.ObjectId, ref: 'Visite', required: false },
+  visite : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Visite', required: false }],
 });
 
 module.exports = mongoose.model('Praticien', praticienSchema);

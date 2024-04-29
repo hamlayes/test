@@ -17,8 +17,11 @@ exports.createPraticien = expressAsyncHandler(async (req, res, next) => {
 
   await praticien.save();
 
+  
+
   res.status(201).json({
-    message: 'Praticien created successfully!'
+    message: 'Praticien created successfully!',
+    praticien_id: praticien._id
   });
 });
 

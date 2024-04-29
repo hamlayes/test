@@ -1,4 +1,6 @@
 const Visite = require('../models/visite');
+const Visiteur = require('../models/visiteur');
+const Praticien = require('../models/praticien');
 
 const expressAsyncHandler = require('express-async-handler');
 
@@ -11,12 +13,27 @@ exports.createVisite = expressAsyncHandler(async (req, res, next) => {
     motif: req.body.motif,
   });
 
-  await visite.save();
+  try {
+    await visite.save();
+   
+     await Praticien.findByIdAndUpdate(req.body.praticien, {
+      $push: { visites: visite._id } //
+      }, { new: true, useFindAndModify: false }); //
+      await Visiteur.findByIdAndUpdate(req.body.visiteur, {
+        $push: { visites: visite._id } //
+      }, { new: true, useFindAndModify: false }); //
 
-  res.status(201).json({
-    message: 'Post saved successfully!'
-  });
+    res.status(201).json({
+      message: 'Visite saved and visitor updated successfully!',
+      visite_id: visite._id
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error
+    });
+  }
 });
+
 
 exports.getOneVisite = expressAsyncHandler(async (req, res, next) => {
   const visite = await Visite.findOne({

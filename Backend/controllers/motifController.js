@@ -11,7 +11,8 @@ exports.createMotif = expressAsyncHandler(async (req, res, next) => {
   await motif.save();
 
   res.status(201).json({
-    message: 'Post saved successfully!'
+    message: 'Post saved successfully!',
+    motif_id: motif._id
   });
 });
 
